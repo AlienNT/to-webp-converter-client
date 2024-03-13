@@ -2,8 +2,6 @@
 import {useImageActions} from "@/composables/useImageActions.ts";
 import {computed, reactive, watch} from "vue";
 
-import FileSize from "@/components/Converter/fields/FileSize.vue";
-import FilePreview from "@/components/Converter/fields/FilePreview.vue";
 import IconButton from "@/components/UI/IconButton.vue";
 import ConverterProgress from "@/components/Converter/ConverterProgress.vue";
 

@@ -9,7 +9,8 @@ interface IFileSizeProps {
 
 const props = defineProps<IFileSizeProps>()
 
-const displaySize = computed(() => {
+const displaySize = computed((): {value: string, unit: string} | null => {
+  if (!props.size) return null
   return toFormatSize(props.size)
 })
 </script>
@@ -17,10 +18,10 @@ const displaySize = computed(() => {
 <template>
 <div class="file-size">
   <div class="size-value">
-    {{displaySize.value}}
+    {{displaySize?.value}}
   </div>
   <div class="size-unit">
-    {{displaySize.unit}}
+    {{displaySize?.unit}}
   </div>
 </div>
 </template>

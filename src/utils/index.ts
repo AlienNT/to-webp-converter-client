@@ -17,10 +17,10 @@ export async function imageToBase(file: File): Promise<string> {
     })
 }
 
-export function toFormatSize(size: number) {
+export function toFormatSize(size: number): { value: string, unit: string } {
     const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
-    function formatting(x = size) {
+    function formatting(x = size): { value: string, unit: string } {
 
         let l = 0
         let n = x || 0;
@@ -30,7 +30,7 @@ export function toFormatSize(size: number) {
         }
 
         return {
-            value: (n.toFixed(n < 10 && l > 0 ? 1 : 0)),
+            value: n.toFixed(n < 10 && l > 0 ? 1 : 0),
             unit: units[l]
         }
     }
@@ -61,6 +61,7 @@ export function downloadImage({name, src}: IDownloadImage) {
     downloadHtmlElement.href = src
     downloadHtmlElement.click()
 }
+
 export function debounce(func: Function, delay: number = 100) {
     let timer: any
 
@@ -70,7 +71,7 @@ export function debounce(func: Function, delay: number = 100) {
     }
 }
 
-export async function createZip(data: {name: string, src: string}[]) {
+export async function createZip(data: { name: string, src: string }[]) {
     const zip = new JSZip();
     if (!zip) return
 
