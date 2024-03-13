@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 import autoprefixer from "autoprefixer";
-import path from "node:path";
+import * as path from "node:path";
 export default defineConfig({
   plugins: [vue()],
   css: {
