@@ -2,7 +2,7 @@
 import {IConverterState} from "@/interfaces/convertingFormInterfaces.ts";
 
 import {computed, onMounted, reactive} from "vue";
-import {imageToBase, uuid} from "@/utils";
+import {createZip, imageToBase, uuid} from "@/utils";
 import {useImageActions} from "@/composables/useImageActions.ts";
 import {useIsOnlineRequest} from "@/composables/useIsOnlineRequest.ts";
 
@@ -12,6 +12,7 @@ import ConverterViewport from "@/components/Converter/ConverterViewport.vue";
 const {
   images,
   addImage,
+  convertedImages
 } = useImageActions()
 
 
@@ -69,6 +70,31 @@ onMounted(() => {
 setInterval(() => {
   fetchServerStatus()
 }, 1000 * 30)
+
+async function downloadHandler() {
+  const filesData = createDownloadFilesData(convertedImages.value)
+  if (!filesData) return
+
+  const filesArchive = await createZip(filesData)
+
+  if (!filesArchive) return
+
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(filesArchive)
+  a.download = "all-files.zip"
+  a.click()
+}
+
+function createDownloadFilesData(files: any) {
+  if (!files?.length) return
+
+  return convertedImages.value?.map(image => {
+    return {
+      name: image.name,
+      src: image.src
+    }
+  })
+}
 </script>
 
 <template>
@@ -86,6 +112,7 @@ setInterval(() => {
           :converting-event="state.isConverting"
       />
       <ConverterFormFooter
+          @on-download="downloadHandler"
           @on-converting="e => state.isConverting = e"
       />
     </div>

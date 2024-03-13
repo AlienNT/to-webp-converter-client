@@ -1,5 +1,6 @@
 import {IDownloadImage} from "@/interfaces/utilsInterfaces.ts";
 import {TUuid} from "@/interfaces/convertingFormInterfaces.ts";
+import JSZip from "jszip";
 
 export async function imageToBase(file: File): Promise<string> {
     return await new Promise((resolve) => {
@@ -67,4 +68,15 @@ export function debounce(func: Function, delay: number = 100) {
         clearTimeout(timer)
         timer = setTimeout(() => func(), delay)
     }
+}
+
+export async function createZip(data: {name: string, src: string}[]) {
+    const zip = new JSZip();
+    if (!zip) return
+
+    data.forEach((file) => {
+        zip.file(file.name, file.src.split(',')[1], {base64: true})
+    })
+
+    return await zip.generateAsync({type: "blob"})
 }
