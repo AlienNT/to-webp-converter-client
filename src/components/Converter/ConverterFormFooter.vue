@@ -12,7 +12,7 @@ import TextButton from "@/components/UI/TextButton.vue";
 import {nextTick} from "vue";
 import ConverterServerStatus from "@/components/Converter/ConverterServerStatus.vue";
 
-const emit = defineEmits(['onConverting'])
+const emit = defineEmits(['onConverting', 'onDownload'])
 
 const {requestCount} = useRequestStatus()
 const {resetImages} = useImageActions()
@@ -28,7 +28,7 @@ async function convertAllHandler() {
 }
 
 function downloadAllHandler() {
-  console.log('download all')
+  emit('onDownload')
 }
 
 function resetAllHandler() {
