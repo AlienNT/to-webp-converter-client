@@ -16,7 +16,10 @@ import ConverterFormCard from "@/components/Converter/ConverterFormCard.vue";
 import ConverterFormHeader from "@/components/Converter/ConverterFormHeader.vue";
 
 const props = withDefaults(defineProps<IConverterFormProps>(), {
-  convertingEvent: false
+  convertingEvent: false,
+  imageName: '',
+  imageSrs: '',
+  imageSize: 0
 })
 const emit = defineEmits(['onRemove'])
 
