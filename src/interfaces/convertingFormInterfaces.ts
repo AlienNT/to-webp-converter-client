@@ -17,15 +17,6 @@ export interface IConvertedStateFile {
     src: TConverterFile,
     file?: File
 }
-export interface IConverterFormProps {
-    imageSize?: number,
-    imageSrc?: string,
-    imageName?: string,
-    uuid: TUuid,
-    file?: File,
-    convertingEvent?: boolean
-}
-
 export interface IConvertingFormState {
     isLoading: boolean,
     progress? : AxiosProgressEvent

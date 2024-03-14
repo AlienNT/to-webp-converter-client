@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {toFormatSize} from "@/utils";
-
-type TSize = number
-interface IFileSizeProps {
-  size?: TSize
-}
+import {IFileSizeProps} from "@/interfaces/propsInterfaces.ts";
 
 const props = defineProps<IFileSizeProps>()
 

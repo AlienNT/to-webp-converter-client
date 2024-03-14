@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import {computed, ref, watch} from "vue";
-interface IConverterProgressProps {
-  currentValue: number,
-  maxValue: number,
-  lineColor?: string
-}
+import {IConverterProgressProps} from "@/interfaces/propsInterfaces.ts";
 
 const props = withDefaults(defineProps<IConverterProgressProps>(), {
   lineColor: `rgba(0, 225, 0, 1)`,

@@ -2,12 +2,10 @@
 
 import {iconNames} from "@/helpers/iconsHelper.ts";
 import IconButton from "@/components/UI/IconButton.vue";
-
-interface IConverterFormHeaderProps {
-  imageName: string
-}
+import {IConverterFormHeaderProps} from "@/interfaces/propsInterfaces.ts";
 
 defineProps<IConverterFormHeaderProps>()
+
 const emit = defineEmits(['onRemove'])
 </script>
 
@@ -28,7 +26,6 @@ const emit = defineEmits(['onRemove'])
 </template>
 
 <style scoped lang="scss">
-
 .form-header {
   flex: 100%;
   display: flex;

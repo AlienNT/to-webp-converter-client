@@ -1,15 +1,10 @@
 <script setup lang="ts">
 
 import ConverterForm from "@/components/Converter/ConverterForm.vue";
-import {IImagesStateItem} from "@/interfaces/imageActionsInterfaces.ts";
 import {TUuid} from "@/interfaces/convertingFormInterfaces.ts";
 
 import {useImageActions} from "@/composables/useImageActions.ts";
-
-interface IConverterViewportProps {
-  imagesList: IImagesStateItem[],
-  convertingEvent: boolean
-}
+import {IConverterViewportProps} from "@/interfaces/propsInterfaces.ts";
 
 defineProps<IConverterViewportProps>()
 

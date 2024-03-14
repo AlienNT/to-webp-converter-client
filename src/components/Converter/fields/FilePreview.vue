@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
-
-interface IFilePreviewProps {
-  imageSrc?: string,
-  imageName?: string
-}
+import {IFilePreviewProps} from "@/interfaces/propsInterfaces.ts";
 
 const props = defineProps<IFilePreviewProps>()
 
@@ -15,11 +11,13 @@ const style = computed(() => [
 
 <template>
   <div class="wrapper">
-    <div class="preview" :style="style">
+    <div
+        class="preview"
+        :style="style"
+    >
       <img
           :src="imageSrc"
           :alt="imageName"
-
       >
     </div>
   </div>

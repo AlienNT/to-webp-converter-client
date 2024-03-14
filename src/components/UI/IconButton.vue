@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
-
-interface IIconButtonProps {
-  type?: 'button' | 'submit' | 'reset',
-  icon: string,
-  title?: string,
-  disabled?: boolean
-}
+import {IIconButtonProps} from "@/interfaces/propsInterfaces.ts";
 
 const props = withDefaults(defineProps<IIconButtonProps>(), {
   type: "button",

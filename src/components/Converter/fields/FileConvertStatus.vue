@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
+import {IImageConvertStatusProps} from "@/interfaces/propsInterfaces.ts";
 
-interface IImageConvertStatusProps {
-  label?: string,
-  color?: string,
-}
 const props = defineProps<IImageConvertStatusProps>()
 
 const style = computed(() => [

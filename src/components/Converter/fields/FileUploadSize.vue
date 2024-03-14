@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import FileSize from "@/components/Converter/fields/FileSize.vue";
-
-interface IFileUploadSizeProps {
-  loaded: number,
-  total: number
-}
+import {IFileUploadSizeProps} from "@/interfaces/propsInterfaces.ts";
 
 defineProps<IFileUploadSizeProps>()
 </script>

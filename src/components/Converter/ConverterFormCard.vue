@@ -2,12 +2,7 @@
 
 import FilePreview from "@/components/Converter/fields/FilePreview.vue";
 import FileSize from "@/components/Converter/fields/FileSize.vue";
-
-interface IConvertFormCartProps {
-  imageSrc?: string,
-  imageName: string,
-  imageSize?: number,
-}
+import {IConvertFormCartProps} from "@/interfaces/propsInterfaces.ts";
 
 defineProps<IConvertFormCartProps>()
 </script>

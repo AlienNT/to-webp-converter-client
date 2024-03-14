@@ -1,8 +1,5 @@
 <script setup lang="ts">
-interface IConvertedImagesCounterProps {
-  convertedImagesAmount: number,
-  imagesAmount: number,
-}
+import {IConvertedImagesCounterProps} from "@/interfaces/propsInterfaces.ts";
 
 defineProps<IConvertedImagesCounterProps>()
 </script>
@@ -10,7 +7,6 @@ defineProps<IConvertedImagesCounterProps>()
 <template>
   <div class="images-counter">
     <div class="loaded">{{ convertedImagesAmount }}</div>
-    /
     <div class="total">{{ imagesAmount }}</div>
   </div>
 </template>
@@ -19,5 +15,11 @@ defineProps<IConvertedImagesCounterProps>()
 .images-counter {
   display: flex;
   align-items: center;
+}
+
+.loaded {
+  &:after {
+    content: '/';
+  }
 }
 </style>
