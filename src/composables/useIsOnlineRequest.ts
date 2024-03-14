@@ -1,6 +1,5 @@
 import {computed, reactive} from "vue";
-import axios from "axios";
-import apiConfig from "@/configs/apiConfig.ts";
+import {useRequest} from "@/composables/useRequest.ts";
 
 const state = reactive({
     isOnline: false
@@ -16,9 +15,10 @@ export function useIsOnlineRequest() {
     }
 
     async function fetchServerStatus() {
-        return axios({
+        const {apiRequest} = useRequest()
+
+        return apiRequest({
             method: 'GET',
-            baseURL: apiConfig.API_URL,
             url: '/is-alive'
         })
             .then(() => setServerStatus(true))
