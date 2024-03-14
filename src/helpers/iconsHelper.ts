@@ -1,4 +1,3 @@
-console.log('import.meta.env.BASE_URL', import.meta.env.BASE_URL)
 export const iconPath = (import.meta.env.BASE_URL || '') + 'icons/'
 
 export const iconNames =  {
