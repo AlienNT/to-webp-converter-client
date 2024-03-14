@@ -8,12 +8,18 @@ const {countIncrement, countDecrement} = useRequestStatus()
 
 export function useRequest() {
     const state = reactive({
-        uploadProgress: <AxiosProgressEvent>{}
+        uploadProgress: <AxiosProgressEvent>{},
+        downloadProgress: <AxiosProgressEvent>{}
     })
 
-    const uploadProgress = computed(() => {
+    const uploadProgress = computed((): AxiosProgressEvent => {
         return state.uploadProgress
     })
+
+    const downloadProgress = computed((): AxiosProgressEvent => {
+        return state.downloadProgress
+    })
+
     async function apiRequest({method = 'GET', url, data}: IRequest) {
         countIncrement()
 
@@ -25,6 +31,9 @@ export function useRequest() {
             onUploadProgress(progressEvent) {
                 state.uploadProgress = progressEvent
             },
+            onDownloadProgress(progressEvent) {
+                state.downloadProgress = progressEvent
+            },
         })
             .then(({data}) => data)
             .finally(() => countDecrement())
@@ -32,6 +41,7 @@ export function useRequest() {
 
     return {
         apiRequest,
-        uploadProgress
+        uploadProgress,
+        downloadProgress
     }
 }
