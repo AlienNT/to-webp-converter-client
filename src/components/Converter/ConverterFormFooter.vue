@@ -4,23 +4,20 @@ import {iconNames} from "@/helpers/iconsHelper.ts";
 import {useImageActions} from "@/composables/useImageActions.ts";
 import {useRequestStatus} from "@/composables/useRequestStatus.ts";
 
-import LoadingSpinner from "@/components/UI/LoadingSpinner.vue";
 import ConvertedImagesCounter from "@/components/Converter/ConvertedImagesCounter.vue";
+import ConverterServerStatus from "@/components/Converter/ConverterServerStatus.vue";
+import LoadingSpinner from "@/components/UI/LoadingSpinner.vue";
 import IconButton from "@/components/UI/IconButton.vue";
 import TextButton from "@/components/UI/TextButton.vue";
 
 import {nextTick} from "vue";
-import ConverterServerStatus from "@/components/Converter/ConverterServerStatus.vue";
 
 const emit = defineEmits(['onConverting', 'onDownload'])
 
 const {requestCount} = useRequestStatus()
 const {resetImages} = useImageActions()
 
-const {
-  convertedImagesAmount,
-  imagesAmount,
-} = useImageActions()
+const {convertedImagesAmount, imagesAmount} = useImageActions()
 
 async function convertAllHandler() {
   emit('onConverting', true)
@@ -97,6 +94,10 @@ function resetAllHandler() {
 .server-status {
   justify-self: flex-start;
 
+}
+
+.loading-indicator {
+  margin-right: auto;
 }
 
 .convert-image-counter {
