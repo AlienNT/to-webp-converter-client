@@ -2,19 +2,16 @@
 import {IConverterState} from "@/interfaces/convertingFormInterfaces.ts";
 
 import {computed, onMounted, reactive} from "vue";
-import {createZip, imageToBase, uuid} from "@/utils";
+import {createDownloadFilesData, createZip, downloadArchive, imageToBase, uuid} from "@/utils";
 import {useImageActions} from "@/composables/useImageActions.ts";
 import {useIsOnlineRequest} from "@/composables/useIsOnlineRequest.ts";
 
 import ConverterFormFooter from "@/components/Converter/ConverterFormFooter.vue";
 import ConverterViewport from "@/components/Converter/ConverterViewport.vue";
 
-const {
-  images,
-  addImage,
-  convertedImages
-} = useImageActions()
+import apiConfig from "@/configs/apiConfig.ts";
 
+const {images, convertedImages, addImage} = useImageActions()
 
 const {fetchServerStatus} = useIsOnlineRequest()
 
@@ -69,30 +66,18 @@ onMounted(() => {
 
 setInterval(() => {
   fetchServerStatus()
-}, 1000 * 30)
+}, apiConfig.IS_ONLINE_REQUEST_TIMEOUT)
 
 async function downloadHandler() {
   const filesData = createDownloadFilesData(convertedImages.value)
   if (!filesData) return
 
   const filesArchive = await createZip(filesData)
-
   if (!filesArchive) return
 
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(filesArchive)
-  a.download = "all-files.zip"
-  a.click()
-}
-
-function createDownloadFilesData(files: any) {
-  if (!files?.length) return
-
-  return convertedImages.value?.map(image => {
-    return {
-      name: image.name,
-      src: image.src
-    }
+  downloadArchive({
+    name: "all-files.zip",
+    src: filesArchive
   })
 }
 </script>
