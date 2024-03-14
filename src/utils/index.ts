@@ -1,5 +1,5 @@
-import {IDownloadImage} from "@/interfaces/utilsInterfaces.ts";
-import {TUuid} from "@/interfaces/convertingFormInterfaces.ts";
+import {IDownloadArchive, IDownloadImage} from "@/interfaces/utilsInterfaces.ts";
+import {IConvertedStateFile, TUuid} from "@/interfaces/convertingFormInterfaces.ts";
 import JSZip from "jszip";
 
 export async function imageToBase(file: File): Promise<string> {
@@ -62,6 +62,14 @@ export function downloadImage({name, src}: IDownloadImage) {
     downloadHtmlElement.click()
 }
 
+export function downloadArchive({name, src}: IDownloadArchive) {
+    const downloadHtmlElement = document.createElement('a')
+
+    downloadHtmlElement.download = name
+    downloadHtmlElement.href = URL.createObjectURL(src)
+    downloadHtmlElement.click()
+}
+
 export function debounce(func: Function, delay: number = 100) {
     let timer: any
 
@@ -71,7 +79,7 @@ export function debounce(func: Function, delay: number = 100) {
     }
 }
 
-export async function createZip(data: { name: string, src: string }[]) {
+export async function createZip(data: IDownloadImage[]) {
     const zip = new JSZip();
     if (!zip) return
 
@@ -80,4 +88,14 @@ export async function createZip(data: { name: string, src: string }[]) {
     })
 
     return await zip.generateAsync({type: "blob"})
+}
+export function createDownloadFilesData(files: IConvertedStateFile[] | null): IDownloadImage[] | null {
+    if (!files?.length) return null
+
+    return files?.map(image => {
+        return {
+            name: image.name,
+            src: image.src
+        }
+    })
 }
