@@ -5,7 +5,8 @@ import {computed, reactive, watch} from "vue";
 import IconButton from "@/components/UI/IconButton.vue";
 import ConverterProgress from "@/components/Converter/ConverterProgress.vue";
 
-import {IConverterFormProps, IConvertingFormState} from "@/interfaces/convertingFormInterfaces.ts";
+import {IConvertingFormState} from "@/interfaces/convertingFormInterfaces.ts";
+import {IConverterFormProps} from "@/interfaces/propsInterfaces.ts";
 
 import {iconNames} from "@/helpers/iconsHelper.ts";
 import {createFormData, downloadImage} from "@/utils";
