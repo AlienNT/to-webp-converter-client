@@ -4,20 +4,24 @@ import {IIconButtonProps} from "@/interfaces/propsInterfaces.ts";
 
 const props = withDefaults(defineProps<IIconButtonProps>(), {
   type: "button",
-  disabled: false
+  disabled: false,
+  useTransform: false,
 })
 
 const emit = defineEmits([
   'onClick'
 ])
-const style = computed(() => {
-  return props.icon ? `mask-image: url(${props.icon})` : ''
-})
+
+const style = computed(() => [
+  props.icon ? `mask-image: url(${props.icon})` : '',
+  props.color ? `background-color: ${props.color}` : ''
+].join('; '))
 </script>
 
 <template>
   <div
       class="button-wrapper"
+      :class="useTransform && 'use-transform'"
       :disabled="disabled"
   >
     <button
@@ -34,12 +38,15 @@ const style = computed(() => {
 <style scoped lang="scss">
 .button-wrapper {
   @media all and (pointer: fine) {
-    cursor: pointer;
-
     &:not([disabled=true]) {
-      &:hover {
+      cursor: pointer;
+
+      .icon-button {
+        cursor: pointer;
+      }
+
+      &.use-transform:hover {
         .icon-button {
-          cursor: pointer;
           transform: translateY(-10%);
           opacity: 1;
         }
