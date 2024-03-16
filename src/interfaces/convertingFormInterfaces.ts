@@ -7,7 +7,8 @@ export interface IConverterState {
     dragEnter: boolean
     dragActive: boolean,
     isConverting: boolean,
-    files: IConvertedStateFile[]
+    files: IConvertedStateFile[],
+    dragFilesCount?: number
 }
 
 export interface IConvertedStateFile {
