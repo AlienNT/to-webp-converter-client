@@ -4,17 +4,19 @@ import {computed, reactive, watch} from "vue";
 
 import IconButton from "@/components/UI/IconButton.vue";
 import ConverterProgress from "@/components/Converter/ConverterProgress.vue";
+import FileUploadSize from "@/components/Converter/fields/FileUploadSize.vue";
+import FileConvertStatus from "@/components/Converter/fields/FileConvertStatus.vue";
+import ConverterFormCard from "@/components/Converter/ConverterFormCard.vue";
+import ConverterFormHeader from "@/components/Converter/ConverterFormHeader.vue";
 
 import {IConvertingFormState} from "@/interfaces/convertingFormInterfaces.ts";
 import {IConverterFormProps} from "@/interfaces/propsInterfaces.ts";
 
 import {iconNames} from "@/helpers/iconsHelper.ts";
+import {colors} from "@/helpers/colorsHelper.ts";
+
 import {createFormData, downloadImage} from "@/utils";
 import {usePostImageSingle} from "@/composables/usePostImageSingle.ts";
-import FileUploadSize from "@/components/Converter/fields/FileUploadSize.vue";
-import FileConvertStatus from "@/components/Converter/fields/FileConvertStatus.vue";
-import ConverterFormCard from "@/components/Converter/ConverterFormCard.vue";
-import ConverterFormHeader from "@/components/Converter/ConverterFormHeader.vue";
 
 const props = withDefaults(defineProps<IConverterFormProps>(), {
   convertingEvent: false,
@@ -112,66 +114,89 @@ watch(() => props.convertingEvent, value => {
 <template>
   <form class="converter-form">
     <ConverterFormHeader
+        class="transition convert-header"
         :image-name="imageName"
+        @on-remove="emit('onRemove', uuid)"
     />
     <div class="form-content">
       <div class="cards">
-        <ConverterFormCard
-            class="convert-before"
-            :image-src="imageSrc"
-            :image-name="imageName"
-            :image-size="imageSize"
-        >
-          <template v-slot:fields>
-            <FileUploadSize
-                v-if="state.isLoading || loadComplete"
-                :loaded="progress?.loaded || 0"
-                :total="progress?.total || 0"
-            />
-            <FileConvertStatus
-                v-if="state.isLoading || loadComplete"
-                :label="loadStatusTitle"
-                :color="lineColor"
-            />
-          </template>
-        </ConverterFormCard>
-        <ConverterFormCard
-            v-if="convertedImage?.src"
-            class="convert-after"
-            :image-name="convertedImage?.name"
-            :image-src="convertedImage?.src"
-            :image-size="convertedImage?.size"
-        >
-          <template v-slot:buttons>
-            <IconButton
-                :icon="iconNames.DOWNLOAD"
-                title="download"
-                @on-click="downloadHandler"
-            />
-          </template>
-        </ConverterFormCard>
+        <transition name="fade" appear>
+          <ConverterFormCard
+              class="transition convert-before"
+              :image-src="imageSrc"
+              :image-name="imageName"
+              :image-size="imageSize"
+          >
+            <template v-slot:fields>
+              <FileUploadSize
+                  class="convert-upload-size"
+                  v-if="state.isLoading || loadComplete"
+                  :loaded="progress?.loaded || 0"
+                  :total="progress?.total || 0"
+              />
+              <FileConvertStatus
+                  class="convert-status"
+                  v-if="state.isLoading || loadComplete"
+                  :label="loadStatusTitle"
+                  :color="lineColor"
+              />
+            </template>
+          </ConverterFormCard>
+        </transition>
+        <transition name="fade" appear>
+          <ConverterFormCard
+              v-if="convertedImage?.src"
+              class="transition convert-after"
+              :image-name="convertedImage?.name"
+              :image-src="convertedImage?.src"
+              :image-size="convertedImage?.size"
+          />
+        </transition>
       </div>
       <div class="buttons">
-        <IconButton
-            :icon="iconNames.CONVERT"
-            :disabled="!!convertedImage?.src"
-            title="convert"
-            class="convert-button"
-            @on-click="convertHandler"
-            @click="convertHandler"
-        />
+        <transition name="fade" appear>
+          <IconButton
+              :icon="iconNames.CONVERT"
+              :disabled="!!convertedImage?.src"
+              :color="colors.CONVERT"
+              use-transform
+              title="convert"
+              class="transition convert-button"
+              @on-click="convertHandler"
+              @click="convertHandler"
+          />
+        </transition>
+        <transition name="fade" appear>
+          <IconButton
+              v-if="convertedImage?.src"
+              :icon="iconNames.DOWNLOAD"
+              :color="colors.DOWNLOAD"
+              use-transform
+              class="transition convert-download"
+              title="download"
+              @on-click="downloadHandler"
+          />
+        </transition>
       </div>
     </div>
-    <ConverterProgress
-        class="image-load-progress"
-        :max-value="totalValue"
-        :current-value="loadedValue"
-        :line-color="lineColor"
-    />
+    <transition name="fade" appear>
+      <ConverterProgress
+          class="transition image-load-progress"
+          :max-value="totalValue"
+          :current-value="loadedValue"
+          :line-color="lineColor"
+      />
+    </transition>
   </form>
 </template>
 
 <style scoped lang="scss">
+@import "../../assets/css/animation";
+
+.transition {
+  transition: .2s ease;
+}
+
 .converter-form {
   flex-wrap: wrap;
   display: flex;
@@ -187,7 +212,7 @@ watch(() => props.convertingEvent, value => {
 
 .form-content {
   display: flex;
-  gap: 15px;
+  gap: 25px;
   flex: 100%;
 }
 
@@ -198,12 +223,19 @@ watch(() => props.convertingEvent, value => {
   flex-wrap: wrap;
 }
 
-
+$convertCardGap: 15px;
 .convert-before, .convert-after {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: $convertCardGap;
+}
+
+.convert-before {
   flex: 1 auto;
+}
+
+.convert-after {
+  flex: none;
 }
 
 .upload-status {
@@ -232,5 +264,9 @@ watch(() => props.convertingEvent, value => {
   bottom: 0;
   left: 0;
   width: 100%;
+}
+
+.convert-download {
+  margin-top: auto;
 }
 </style>
