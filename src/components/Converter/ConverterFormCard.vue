@@ -28,21 +28,32 @@ defineProps<IConvertFormCartProps>()
 .card {
   display: flex;
 }
-.image-name {
-  flex: 100%;
-  text-align: left;
-  font-size: 14px;
-}
+
 
 .convert-preview {
+  transition: width .2s ease;
   width: 200px;
+  @media #{$mediumScreen} {
+    width: 150px;
+  }
+  @media #{$smallScreen} {
+    width: 80px;
+  }
 }
+
 .upload-info {
   display: flex;
   flex-direction: column;
   font-size: 14px;
   text-align: left;
   gap: 10px;
+
+  @media #{$mediumScreen} {
+    gap: 10px;
+  }
+  @media #{$smallScreen} {
+    gap: 2px;
+  }
 }
 
 </style>
