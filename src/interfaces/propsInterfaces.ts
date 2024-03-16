@@ -62,5 +62,15 @@ export interface IIconButtonProps {
     type?: TButtonType,
     icon: string,
     title?: string,
-    disabled?: boolean
+    disabled?: boolean,
+    useTransform?: boolean,
+    color?: string
+}
+export interface ITextButtonProps {
+    type?: TButtonType,
+    title?: string,
+    label?: string,
+    disabled?: boolean,
+    backgroundColor?: string,
+    useTransform?: boolean
 }
