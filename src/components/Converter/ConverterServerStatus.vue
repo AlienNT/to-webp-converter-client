@@ -9,9 +9,9 @@ const {isOnline} = useIsOnlineRequest()
     <div>Server</div>
     <div
         :class="isOnline && 'online'"
+        :title="isOnline ? 'online' : 'offline'"
         class="status"
     >
-      {{ isOnline ? 'online' : 'offline' }}
     </div>
   </div>
 </template>
@@ -25,10 +25,16 @@ const {isOnline} = useIsOnlineRequest()
 }
 
 .status {
-  color: #a4a4a4;
+  width: 10px;
+  height: 10px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #a4a4a4;
+  border-radius: 50%;
 
   &.online {
-    color: #7bccff;
+    border-color: #7bccff;
+    background: #7bccff;
   }
 }
 </style>
