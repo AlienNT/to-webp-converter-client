@@ -8,6 +8,7 @@ import {useIsOnlineRequest} from "@/composables/useIsOnlineRequest.ts";
 
 import ConverterFormFooter from "@/components/Converter/ConverterFormFooter.vue";
 import ConverterViewport from "@/components/Converter/ConverterViewport.vue";
+import DropPopup from "@/components/UI/DropPopup.vue";
 
 import apiConfig from "@/configs/apiConfig.ts";
 
@@ -86,53 +87,45 @@ async function downloadHandler() {
   <main
       class="main drop-zone"
       :class="classNames"
-      @dragover.prevent
       @dragenter="dragEnterHandler"
       @dragleave="dragLeaveHandler"
       @drop="onDrop"
+      @dragover.prevent
   >
-    <div class="container">
-      <ConverterViewport
-          :images-list="images"
-          :converting-event="state.isConverting"
+    <ConverterViewport
+        :images-list="images"
+        :converting-event="state.isConverting"
+    />
+    <ConverterFormFooter
+        @on-download="downloadHandler"
+        @on-converting="e => state.isConverting = e"
+    />
+    <transition name="fade" appear>
+      <DropPopup
+          v-if="state.dragEnter"
+          label="Drop files to upload"
+          title="Drop files to upload"
       />
-      <ConverterFormFooter
-          @on-download="downloadHandler"
-          @on-converting="e => state.isConverting = e"
-      />
-    </div>
+    </transition>
   </main>
 </template>
 
 <style scoped lang="scss">
+@import "assets/css/animation";
+
 .main {
   overflow-y: scroll;
   display: flex;
-
-  > .container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
+  flex: 1;
+  flex-direction: column;
 }
 
 .drop-zone {
   border-radius: 10px;
-  border: 2px dashed transparent;
   text-align: center;
   color: #d9d9d9;
   font-size: 18px;
   font-family: monospace;
   padding-top: 40px;
-
-  &.drag-active {
-    border: 2px dashed gray;
-
-  }
-
-  &.drag-enter {
-    border-color: #5ab05a;
-    color: #5ab05a;
-  }
 }
 </style>
