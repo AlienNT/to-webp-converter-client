@@ -10,7 +10,8 @@ import LoadingSpinner from "@/components/UI/LoadingSpinner.vue";
 import IconButton from "@/components/UI/IconButton.vue";
 import TextButton from "@/components/UI/TextButton.vue";
 
-import {nextTick} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
+import {colors} from "@/helpers/colorsHelper.ts";
 
 const emit = defineEmits(['onConverting', 'onDownload'])
 
@@ -18,6 +19,12 @@ const {requestCount} = useRequestStatus()
 const {resetImages} = useImageActions()
 
 const {convertedImagesAmount, imagesAmount} = useImageActions()
+
+const isShowLoader = ref(false)
+
+const isLoading = computed(() => {
+  return requestCount.value > 0
+})
 
 async function convertAllHandler() {
   emit('onConverting', true)
@@ -32,75 +39,127 @@ function resetAllHandler() {
   resetImages()
 }
 
+watch(() => isLoading.value, (value) => {
+  value ? isShowLoader.value = value : setTimeout(() => isShowLoader.value = value, 200)
+})
+
 </script>
 
 <template>
   <footer
       class="convert-buttons-wrapper"
   >
-    <ConverterServerStatus
-        class="server-status"
-    />
-    <LoadingSpinner
-        v-if="requestCount > 0"
-        class="loading-indicator"
-    />
-    <template
-        v-if="imagesAmount"
-    >
-      <ConvertedImagesCounter
-          class="convert-image-counter"
-          :converted-images-amount="convertedImagesAmount"
-          :images-amount="imagesAmount"
+    <div class="container">
+      <ConverterServerStatus
+          class="server-status"
       />
-      <IconButton
-          :icon="iconNames.REMOVE"
-          :disabled="!imagesAmount"
-          title="reset images"
-          class="reset-button"
-          @on-click="resetAllHandler"
-      />
-      <TextButton
-          label="convert all"
-          :disabled="convertedImagesAmount === imagesAmount"
-          :background-color="`#ffbb54`"
-          @on-click="convertAllHandler"
-      />
-      <TextButton
-          label="download all"
-          :disabled="!convertedImagesAmount"
-          :background-color="`#5AB05AFF`"
-          @on-click="downloadAllHandler"
-      />
-    </template>
+      <transition name="fade" appear>
+        <LoadingSpinner
+            v-if="isShowLoader"
+            class="loading-indicator"
+        />
+      </transition>
+      <transition name="fade" appear>
+        <div
+            v-if="imagesAmount"
+            class="convert-ui-elements"
+        >
+          <ConvertedImagesCounter
+              class="convert-image-counter"
+              :converted-images-amount="convertedImagesAmount"
+              :images-amount="imagesAmount"
+          />
+          <IconButton
+              :icon="iconNames.RESET"
+              :color="colors.REMOVE"
+              :disabled="!imagesAmount"
+              title="reset images"
+              class="reset-button"
+              @on-click="resetAllHandler"
+          />
+          <TextButton
+              label="convert"
+              class="convert-all-button"
+              :disabled="convertedImagesAmount === imagesAmount"
+              :background-color="colors.CONVERT"
+              @on-click="convertAllHandler"
+          />
+          <TextButton
+              label="download"
+              class="download-all-button"
+              :disabled="!convertedImagesAmount"
+              :background-color="colors.DOWNLOAD"
+              @on-click="downloadAllHandler"
+          />
+        </div>
+      </transition>
+    </div>
   </footer>
 </template>
 
 <style scoped lang="scss">
+@import "../../assets/css/animation";
+
+.convert-ui-elements {
+  display: flex;
+  gap: 15px;
+  transition: .2s ease;
+  align-items: center;
+
+  @media #{$mediumScreen} {
+    gap: 10px;
+  }
+}
+
 .convert-buttons-wrapper {
   margin-top: auto;
   display: flex;
   justify-content: space-between;
-  padding: 15px 0;
+  align-items: center;
+  padding: 15px;
   gap: 15px;
   position: sticky;
   bottom: 0;
-  background: #232425;
+  background: #28282a;
   z-index: 1;
   min-height: 80px;
-  align-items: center;
+  > .container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
 }
 
 .server-status {
   justify-self: flex-start;
 
+  @media #{$mediumScreen} {
+    font-size: 12px;
+  }
 }
 
 .loading-indicator {
+  transition: .2s;
   margin-right: auto;
 }
 
 .convert-image-counter {
   margin-left: auto;
+  font-size: 14px;
+
+  @media #{$mediumScreen} {
+    font-size: 12px;
+  }
 }
+
+.reset-button {
+  align-items: center;
+  display: flex;
+  transition: .2s ease;
+
+  &:hover {
+    transform: rotate(-180deg)
+  }
+}
+
 </style>
