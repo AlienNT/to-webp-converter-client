@@ -4,4 +4,5 @@ export const iconNames =  {
     DOWNLOAD: iconPath + 'download-svgrepo-com.svg',
     REMOVE: iconPath + 'remove-square-svgrepo-com.svg',
     CONVERT: iconPath + 'convert-card-svgrepo-com.svg',
+    RESET: iconPath + 'clear-all-svgrepo-com.svg',
 }
