@@ -8,11 +8,12 @@ import {useIsOnlineRequest} from "@/composables/useIsOnlineRequest.ts";
 
 import ConverterFormFooter from "@/components/Converter/ConverterFormFooter.vue";
 import ConverterViewport from "@/components/Converter/ConverterViewport.vue";
+import ConverterFilePicker from "@/components/Converter/ConverterFilePicker.vue";
 import DropPopup from "@/components/UI/DropPopup.vue";
 
 import apiConfig from "@/configs/apiConfig.ts";
 
-const {images, convertedImages, addImage} = useImageActions()
+const {images, convertedImages, imagesAmount, addImage} = useImageActions()
 
 const {fetchServerStatus} = useIsOnlineRequest()
 
@@ -28,7 +29,7 @@ const classNames = computed(() => [
   state.dragEnter ? 'drag-enter' : ''
 ].join(' '))
 
-function onDrop(e: DragEvent) {
+function dropHandler(e: DragEvent) {
   e.preventDefault()
   const files = e.dataTransfer?.files
 
@@ -36,6 +37,10 @@ function onDrop(e: DragEvent) {
   if (files?.length) {
     filesAction(files)
   }
+}
+
+function fileInputHandler(files: FileList) {
+  filesAction(files)
 }
 
 async function filesAction(files: FileList) {
@@ -81,6 +86,7 @@ async function downloadHandler() {
     src: filesArchive
   })
 }
+
 </script>
 
 <template>
@@ -89,12 +95,19 @@ async function downloadHandler() {
       :class="classNames"
       @dragenter="dragEnterHandler"
       @dragleave="dragLeaveHandler"
-      @drop="onDrop"
+      @drop="dropHandler"
       @dragover.prevent
   >
+    <div class="converter-title">
+      To Webp Converter
+    </div>
     <ConverterViewport
+        v-if="imagesAmount"
         :images-list="images"
         :converting-event="state.isConverting"
+    />
+    <ConverterFilePicker
+        @on-input="fileInputHandler"
     />
     <ConverterFormFooter
         @on-download="downloadHandler"
@@ -127,5 +140,10 @@ async function downloadHandler() {
   font-size: 18px;
   font-family: monospace;
   padding-top: 40px;
+}
+
+.converter-title {
+  font-size: 24px;
+  margin-bottom: 25px;
 }
 </style>

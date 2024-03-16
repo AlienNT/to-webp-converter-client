@@ -18,9 +18,6 @@ function removeHandler(uuid: TUuid) {
 
 <template>
   <div class="container">
-    <div class="converter-title">
-      To Webp Converter
-    </div>
     <ul class="images-list">
       <li
           v-for="(imageState, index) in imagesList"
@@ -42,11 +39,6 @@ function removeHandler(uuid: TUuid) {
 </template>
 
 <style scoped lang="scss">
-.converter-title {
-  font-size: 24px;
-  margin-bottom: 25px;
-}
-
 .images-list {
   display: flex;
   flex-direction: column;
