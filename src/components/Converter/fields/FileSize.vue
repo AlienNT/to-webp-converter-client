@@ -26,5 +26,11 @@ const displaySize = computed((): {value: string, unit: string} | null => {
   font-size: 16px;
   display: flex;
   gap: 5px;
+  @media #{$mediumScreen} {
+    font-size: 14px;
+  }
+  @media #{$smallScreen} {
+    font-size: 12px;
+  }
 }
 </style>
