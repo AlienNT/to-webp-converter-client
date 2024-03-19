@@ -7,6 +7,7 @@ export interface IConverterState {
     dragEnter: boolean
     dragActive: boolean,
     isConverting: boolean,
+    isCancelUpload: boolean,
     files: IConvertedStateFile[],
     dragFilesCount?: number
 }
@@ -20,5 +21,6 @@ export interface IConvertedStateFile {
 }
 export interface IConvertingFormState {
     isLoading: boolean,
+    isError: boolean,
     progress? : AxiosProgressEvent
 }
