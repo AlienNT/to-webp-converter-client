@@ -2,8 +2,6 @@ import {IConvertedStateFile, TUuid} from "@/interfaces/convertingFormInterfaces.
 import {AxiosProgressEvent} from "axios";
 import {ComputedRef} from "vue";
 
-//@ts-ignore
-
 export interface IImagesStateItem {
     image: IConvertedStateFile,
     convertedImage?: IConvertedStateFile,
@@ -20,6 +18,7 @@ export interface IPostImageRequest {
 export interface IPostImageResponse {
     request: (formData: FormData) => Promise<IPostImageRequest>,
     progress?: ComputedRef<AxiosProgressEvent>
+    cancelRequest: () => void
 }
 
 export interface IPostImage {
