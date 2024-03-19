@@ -2,7 +2,7 @@ import {IPostImageRequest, IPostImageResponse} from "@/interfaces/imageActionsIn
 import {useRequest} from "@/composables/useRequest.ts";
 
 export function usePostImageSingle(): IPostImageResponse {
-    const {apiRequest, uploadProgress} = useRequest()
+    const {apiRequest, uploadProgress, abortController} = useRequest()
 
     return {
         request: (formData: FormData): Promise<IPostImageRequest> => apiRequest({
@@ -10,6 +10,7 @@ export function usePostImageSingle(): IPostImageResponse {
             url: '/convert-single',
             data: formData
         }),
-        progress: uploadProgress
+        progress: uploadProgress,
+        cancelRequest: () => abortController.value.abort()
     }
 }

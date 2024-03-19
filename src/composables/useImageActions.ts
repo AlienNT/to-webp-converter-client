@@ -66,14 +66,15 @@ export function useImageActions() {
     }
 
     function postImageMultiple(formData: FormData): IPostImageResponse {
-        const {apiRequest, uploadProgress} = useRequest()
+        const {apiRequest, uploadProgress, abortController} = useRequest()
         return {
             request: () => apiRequest({
                 method: "POST",
                 url: '/convert-multiple',
                 data: formData
             }),
-            progress: uploadProgress
+            progress: uploadProgress,
+            cancelRequest: () => abortController.value.abort()
         }
     }
 
