@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {IConverterState} from "@/interfaces/convertingFormInterfaces.ts";
 
-import {computed, onMounted, reactive} from "vue";
+import {computed, nextTick, onMounted, reactive} from "vue";
 import {createDownloadFilesData, createZip, downloadArchive, imageToBase, uuid} from "@/utils";
 import {useImageActions} from "@/composables/useImageActions.ts";
 import {useIsOnlineRequest} from "@/composables/useIsOnlineRequest.ts";
@@ -13,15 +13,16 @@ import DropPopup from "@/components/UI/DropPopup.vue";
 
 import apiConfig from "@/configs/apiConfig.ts";
 
-const {images, convertedImages, imagesAmount, addImage} = useImageActions()
+const {images, convertedImages, imagesAmount, addImage, resetImages} = useImageActions()
 
 const {fetchServerStatus} = useIsOnlineRequest()
 
 const state: IConverterState = reactive({
   dragEnter: false,
   dragActive: false,
-  files: [],
-  isConverting: false
+  isConverting: false,
+  isCancelUpload: false,
+  files: []
 })
 
 const classNames = computed(() => [
@@ -87,6 +88,15 @@ async function downloadHandler() {
   })
 }
 
+async function removeAllHandler() {
+  state.isCancelUpload = true
+
+  await nextTick(() => {
+    state.isCancelUpload = false
+    resetImages()
+  })
+}
+
 </script>
 
 <template>
@@ -105,6 +115,7 @@ async function downloadHandler() {
         v-if="imagesAmount"
         :images-list="images"
         :converting-event="state.isConverting"
+        :cancel-upload-event="state.isCancelUpload"
     />
     <ConverterFilePicker
         @on-input="fileInputHandler"
@@ -112,6 +123,7 @@ async function downloadHandler() {
     <ConverterFormFooter
         @on-download="downloadHandler"
         @on-converting="e => state.isConverting = e"
+        @on-remove-all="removeAllHandler"
     />
     <transition name="fade" appear>
       <DropPopup
