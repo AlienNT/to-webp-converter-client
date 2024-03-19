@@ -9,8 +9,11 @@ const {countIncrement, countDecrement} = useRequestStatus()
 export function useRequest() {
     const state = reactive({
         uploadProgress: <AxiosProgressEvent>{},
-        downloadProgress: <AxiosProgressEvent>{}
+        downloadProgress: <AxiosProgressEvent>{},
+        abortController: <AbortController>{}
     })
+
+    state.abortController = new AbortController()
 
     const uploadProgress = computed((): AxiosProgressEvent => {
         return state.uploadProgress
@@ -18,6 +21,10 @@ export function useRequest() {
 
     const downloadProgress = computed((): AxiosProgressEvent => {
         return state.downloadProgress
+    })
+
+    const abortController = computed((): AbortController => {
+        return state.abortController
     })
 
     async function apiRequest({method = 'GET', url, data}: IRequest) {
@@ -28,6 +35,7 @@ export function useRequest() {
             baseURL: apiConfig.API_URL,
             url,
             data,
+            signal: state.abortController.signal,
             onUploadProgress(progressEvent) {
                 state.uploadProgress = progressEvent
             },
@@ -42,6 +50,7 @@ export function useRequest() {
     return {
         apiRequest,
         uploadProgress,
-        downloadProgress
+        downloadProgress,
+        abortController
     }
 }
