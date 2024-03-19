@@ -20,6 +20,7 @@ import {usePostImageSingle} from "@/composables/usePostImageSingle.ts";
 
 const props = withDefaults(defineProps<IConverterFormProps>(), {
   convertingEvent: false,
+  cancelUploadEvent: false,
   imageName: '',
   imageSrs: '',
   imageSize: 0
@@ -27,10 +28,11 @@ const props = withDefaults(defineProps<IConverterFormProps>(), {
 const emit = defineEmits(['onRemove'])
 
 const {addConvertedImage, convertedImageGetter} = useImageActions()
-const {progress, request} = usePostImageSingle()
+const {progress, request, cancelRequest} = usePostImageSingle()
 
 const state: IConvertingFormState = reactive({
   isLoading: false,
+  isError: false
 })
 
 const convertedImage = computed(() => {
@@ -50,14 +52,17 @@ const loadComplete = computed(() => {
 })
 
 const lineColor = computed(() => {
+  if (state.isError) {
+    return colors.ERROR
+  }
   if (isConvertedImage.value) {
-    return `#1EFF1EFF`
+    return colors.DOWNLOAD
   }
   if (loadComplete.value && state.isLoading) {
-    return `#ffcc10`
+    return colors.CONVERT
   }
 
-  return `#11dbff`
+  return colors.LOADING
 })
 
 const totalValue = computed(() => {
@@ -69,6 +74,7 @@ const loadedValue = computed(() => {
 })
 
 const loadStatusTitle = computed(() => {
+  if (state.isError) return 'error'
   if (loadComplete.value && !state.isLoading) return 'complete'
 
   return loadComplete.value ? 'converting...' : 'loading...'
@@ -85,12 +91,16 @@ async function convertHandler() {
   if (!formData) return
 
   state.isLoading = true
+  state.isError = false
 
-  await request(formData).then(({data}) => {
-    addConvertedImage(data)
-    state.isLoading = false
-  })
-
+  await request(formData)
+      .then(({data}) => {
+        addConvertedImage(data)
+        state.isLoading = false
+      })
+      .catch(() => {
+        state.isError = true
+      })
 }
 
 function downloadHandler() {
@@ -101,11 +111,19 @@ function downloadHandler() {
     src: convertedImage.value.src
   })
 }
+function removeHandler() {
+  cancelRequest()
+  emit('onRemove', props.uuid)
+}
 
 watch(() => props.convertingEvent, value => {
-  if (value) {
-    convertHandler()
-  }
+  if (value) convertHandler()
+}, {
+  immediate: true
+})
+
+watch(() => props.cancelUploadEvent, value => {
+  if (value) cancelRequest()
 }, {
   immediate: true
 })
@@ -116,7 +134,7 @@ watch(() => props.convertingEvent, value => {
     <ConverterFormHeader
         class="transition convert-header"
         :image-name="imageName"
-        @on-remove="emit('onRemove', uuid)"
+        @on-remove="removeHandler"
     />
     <div class="form-content">
       <div class="cards">

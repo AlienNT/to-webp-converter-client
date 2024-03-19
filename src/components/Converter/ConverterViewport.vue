@@ -31,6 +31,7 @@ function removeHandler(uuid: TUuid) {
             :file="imageState.image?.file"
             :uuid="imageState.image?.uuid"
             :converting-event="convertingEvent"
+            :cancel-upload-event="cancelUploadEvent"
             @on-remove="removeHandler"
         />
       </li>
