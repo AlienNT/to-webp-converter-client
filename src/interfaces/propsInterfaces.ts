@@ -10,7 +10,8 @@ export interface IConverterFormProps {
     imageName?: string,
     uuid: TUuid,
     file?: File,
-    convertingEvent?: boolean
+    convertingEvent?: boolean,
+    cancelUploadEvent?: boolean
 }
 
 export interface IConverterFormHeaderProps {
@@ -50,7 +51,8 @@ export interface IConvertFormCartProps {
 
 export interface IConverterViewportProps {
     imagesList: IImagesStateItem[],
-    convertingEvent: boolean
+    convertingEvent: boolean,
+    cancelUploadEvent: boolean
 }
 
 export interface IFilePreviewProps {
