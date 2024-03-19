@@ -13,11 +13,9 @@ import TextButton from "@/components/UI/TextButton.vue";
 import {computed, nextTick, ref, watch} from "vue";
 import {colors} from "@/helpers/colorsHelper.ts";
 
-const emit = defineEmits(['onConverting', 'onDownload'])
+const emit = defineEmits(['onConverting', 'onDownload', 'onRemoveAll'])
 
 const {requestCount} = useRequestStatus()
-const {resetImages} = useImageActions()
-
 const {convertedImagesAmount, imagesAmount} = useImageActions()
 
 const isShowLoader = ref(false)
@@ -36,7 +34,7 @@ function downloadAllHandler() {
 }
 
 function resetAllHandler() {
-  resetImages()
+  emit('onRemoveAll')
 }
 
 watch(() => isLoading.value, (value) => {
